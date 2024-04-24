@@ -1,0 +1,21 @@
+{
+  "name": "wordle-clone",
+  "version": "1.0.0",
+  "description": "Wordle clone",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon ./app.js",
+    "start": "node ./app.js"
+  },
+  "author": "Victor Volovik",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.1.1",
+    "eslint": "^9.1.1",
+    "globals": "^15.0.0",
+    "nodemon": "^3.1.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
