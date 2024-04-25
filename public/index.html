@@ -7,5 +7,26 @@
     <link rel="stylesheet" href="styles/main.css" />
     <script src="scripts/index.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <div class="app-root">
+      <h1 class="app-title">Wordle</h1>
+
+      <div class="mode-selector">
+        <h2 class="mode-selector-title">Select mode</h2>
+
+        <form name="mode-selector" class="mode-selector-form">
+          <label>
+            <span>Daily</span>
+            <input name="mode" type="radio" value="daily" checked />
+          </label>
+          <label>
+            <span>Random</span>
+            <input name="mode" type="radio" value="random" />
+          </label>
+        </form>
+      </div>
+
+      <div class="current-word"></div>
+    </div>
+  </body>
 </html>

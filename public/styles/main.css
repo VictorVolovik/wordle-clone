@@ -1,3 +1,20 @@
 body {
-  background-color: papayawhip;
+  background-color: #e3e3e3;
+}
+
+.app-root {
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.mode-selector-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  margin: 30px 0;
 }
