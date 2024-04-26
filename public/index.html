@@ -12,16 +12,27 @@
       <h1 class="app-title">Wordle</h1>
 
       <div class="mode-selector">
-        <h2 class="mode-selector-title">Select mode</h2>
+        <h2 class="mode-selector-title">Select game mode</h2>
 
         <form name="mode-selector" class="mode-selector-form">
-          <label>
-            <span>Daily</span>
-            <input name="mode" type="radio" value="daily" checked />
+          <label class="mode-selector-item selected">
+            <span class="">Daily</span>
+            <input
+              class="mode-selector-radio"
+              name="mode"
+              type="radio"
+              value="daily"
+              checked
+            />
           </label>
-          <label>
+          <label class="mode-selector-item">
             <span>Random</span>
-            <input name="mode" type="radio" value="random" />
+            <input
+              class="mode-selector-radio"
+              name="mode"
+              type="radio"
+              value="random"
+            />
           </label>
         </form>
       </div>

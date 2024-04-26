@@ -52,13 +52,28 @@ function init(mode) {
   getWordOfTheDay(mode);
 }
 
+document.body.classList.remove;
+
 modeSelectorFormEl.mode.forEach((radio) =>
   radio.addEventListener("change", function (e) {
     const newMode = e.target.value;
     if (newMode !== currentMode) {
+      modeSelectorFormEl.mode.forEach((r) => {
+        r.parentNode.classList.remove("selected");
+      });
+      e.target.parentNode.classList.add("selected");
       currentMode = e.target.value;
       init(newMode);
     }
+  }),
+);
+
+modeSelectorFormEl.mode.forEach((radio) =>
+  radio.addEventListener("focus", function (e) {
+    modeSelectorFormEl.mode.forEach((r) => {
+      r.parentNode.classList.remove("focused");
+    });
+    e.target.parentNode.classList.add("focused");
   }),
 );
 
