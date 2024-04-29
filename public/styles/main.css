@@ -3,6 +3,7 @@
 }
 
 body {
+  font-family: sans-serif;
   background-color: #ddd;
 }
 
@@ -58,6 +59,44 @@ body {
   width: 0;
 }
 
-.current-word {
-  /* display: none; */
+.loading-word {
+  height: 20px;
+  margin-bottom: 30px;
+}
+
+.word-guess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.word-guess-form {
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.word-guess-input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.word-display {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.word-display-character {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid grey;
+  cursor: pointer;
 }

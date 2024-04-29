@@ -5,12 +5,16 @@ let currentMode = "daily"; // daily | random
 let isLoading = true;
 
 const modeSelectorFormEl = document.querySelector(".mode-selector-form");
-const currentWordEl = document.querySelector(".current-word");
+const wordGuessFormEl = document.querySelector(".word-guess-form");
+const wordInputEls = wordGuessFormEl.querySelectorAll(".word-guess-input");
+const currentWordEl = document.querySelector(".loading-word");
 
-function render() {
+function renderLoading() {
+  wordOfTheDay && console.log(`wordOfTheDay:`, wordOfTheDay);
+
   isLoading
     ? (currentWordEl.textContent = "Loading...")
-    : (currentWordEl.textContent = wordOfTheDay);
+    : (currentWordEl.textContent = " ");
 }
 
 async function getWordOfTheDay(mode) {
@@ -26,7 +30,7 @@ async function getWordOfTheDay(mode) {
     console.error(e);
   }
 
-  render();
+  renderLoading();
 }
 
 async function validateWord(word) {
@@ -43,12 +47,12 @@ async function validateWord(word) {
     console.error(e);
   }
 
-  render();
+  renderLoading();
 }
 
 function init(mode) {
   isLoading = true;
-  render();
+  renderLoading();
   getWordOfTheDay(mode);
 }
 
@@ -65,7 +69,7 @@ modeSelectorFormEl.mode.forEach((radio) =>
       currentMode = e.target.value;
       init(newMode);
     }
-  }),
+  })
 );
 
 modeSelectorFormEl.mode.forEach((radio) =>
@@ -74,11 +78,58 @@ modeSelectorFormEl.mode.forEach((radio) =>
       r.parentNode.classList.remove("focused");
     });
     e.target.parentNode.classList.add("focused");
-  }),
+  })
 );
 
 init(currentMode);
 
-// check word validation
-validateWord("crane").then((result) => console.log(result)); // true
-validateWord("abcde").then((result) => console.log(result)); // false
+function isLetter(letter) {
+  return /^[a-zA-Z]$/.test(letter);
+}
+
+async function handleWordSubmit(value, index) {
+  const result = await validateWord(value);
+
+  if (result === true) {
+    wordInputEls[index].setAttribute("disabled", "");
+
+    if (index < 5) {
+      wordInputEls[index + 1].removeAttribute("disabled");
+    }
+  } else {
+    alert("Not a known word");
+  }
+}
+
+wordInputEls.forEach((input, index) =>
+  input.addEventListener("keydown", function (e) {
+    const value = e.target.value;
+
+    if (value.length === 5 && e.key === "Enter") {
+      handleWordSubmit(value, index);
+    }
+
+    if (e.key !== "Backspace" && !isLetter(e.key)) {
+      e.preventDefault();
+    }
+  })
+);
+
+wordInputEls.forEach((input, index) =>
+  input.addEventListener("keyup", function (e) {
+    if (e.key === "Backspace") {
+      e.preventDefault();
+    }
+
+    const value = e.target.value;
+    const chars = document.querySelector(`.word-${index + 1}-label`);
+
+    chars.querySelectorAll(".word-display-character").forEach((char, index) => {
+      if (value[index]) {
+        char.textContent = value[index];
+      } else {
+        char.textContent = " ";
+      }
+    });
+  })
+);

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,13 +14,13 @@
       <div class="mode-selector">
         <h2 class="mode-selector-title">Select game mode</h2>
 
-        <form name="mode-selector" class="mode-selector-form">
+        <form name="mode-selector-form" class="mode-selector-form">
           <label class="mode-selector-item selected">
             <span class="">Daily</span>
             <input
-              class="mode-selector-radio"
               name="mode"
               type="radio"
+              class="mode-selector-radio"
               value="daily"
               checked
             />
@@ -28,16 +28,139 @@
           <label class="mode-selector-item">
             <span>Random</span>
             <input
-              class="mode-selector-radio"
               name="mode"
               type="radio"
+              class="mode-selector-radio"
               value="random"
             />
           </label>
         </form>
       </div>
 
-      <div class="current-word"></div>
+      <div class="loading-word"></div>
+
+      <div class="word-guess">
+        <form name="word-guess-form" class="word-guess-form">
+          <label class="word-1-label" for="word-1">
+            <div class="word-display">
+              <div class="word-display-character character-1"></div>
+              <div class="word-display-character character-2"></div>
+              <div class="word-display-character character-3"></div>
+              <div class="word-display-character character-4"></div>
+              <div class="word-display-character character-5"></div>
+            </div>
+
+            <input
+              id="word-1"
+              name="word-1"
+              type="text"
+              class="word-guess-input"
+              maxlength="5"
+              pattern="[a-zA-Z]*"
+            />
+          </label>
+
+          <label class="word-2-label" for="word-2">
+            <div class="word-display">
+              <div class="word-display-character character-1"></div>
+              <div class="word-display-character character-2"></div>
+              <div class="word-display-character character-3"></div>
+              <div class="word-display-character character-4"></div>
+              <div class="word-display-character character-5"></div>
+            </div>
+
+            <input
+              id="word-2"
+              name="word-2"
+              type="text"
+              class="word-guess-input"
+              maxlength="5"
+              pattern="[a-zA-Z]*"
+              disabled
+            />
+          </label>
+
+          <label class="word-3-label" for="word-3">
+            <div class="word-display">
+              <div class="word-display-character character-1"></div>
+              <div class="word-display-character character-2"></div>
+              <div class="word-display-character character-3"></div>
+              <div class="word-display-character character-4"></div>
+              <div class="word-display-character character-5"></div>
+            </div>
+
+            <input
+              id="word-3"
+              name="word-3"
+              type="text"
+              class="word-guess-input"
+              maxlength="5"
+              pattern="[a-zA-Z]*"
+              disabled
+            />
+          </label>
+
+          <label class="word-4-label" for="word-4">
+            <div class="word-display">
+              <div class="word-display-character character-1"></div>
+              <div class="word-display-character character-2"></div>
+              <div class="word-display-character character-3"></div>
+              <div class="word-display-character character-4"></div>
+              <div class="word-display-character character-5"></div>
+            </div>
+
+            <input
+              id="word-4"
+              name="word-4"
+              type="text"
+              class="word-guess-input"
+              maxlength="5"
+              pattern="[a-zA-Z]*"
+              disabled
+            />
+          </label>
+
+          <label class="word-5-label" for="word-5">
+            <div class="word-display">
+              <div class="word-display-character character-1"></div>
+              <div class="word-display-character character-2"></div>
+              <div class="word-display-character character-3"></div>
+              <div class="word-display-character character-4"></div>
+              <div class="word-display-character character-5"></div>
+            </div>
+
+            <input
+              id="word-5"
+              name="word-5"
+              type="text"
+              class="word-guess-input"
+              maxlength="5"
+              pattern="[a-zA-Z]*"
+              disabled
+            />
+          </label>
+
+          <label class="word-6-label" for="word-6">
+            <div class="word-display">
+              <div class="word-display-character character-1"></div>
+              <div class="word-display-character character-2"></div>
+              <div class="word-display-character character-3"></div>
+              <div class="word-display-character character-4"></div>
+              <div class="word-display-character character-5"></div>
+            </div>
+
+            <input
+              id="word-6"
+              name="word-6"
+              type="text"
+              class="word-guess-input"
+              maxlength="5"
+              pattern="[a-zA-Z]*"
+              disabled
+            />
+          </label>
+        </form>
+      </div>
     </div>
   </body>
 </html>
