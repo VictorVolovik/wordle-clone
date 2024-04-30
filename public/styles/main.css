@@ -45,6 +45,7 @@ body {
   border: 2px solid rgb(50, 50, 50);
   border-radius: 8px;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
 .mode-selector-item.selected {

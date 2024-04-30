@@ -25,6 +25,12 @@ function renderLoading() {
     : (currentWordEl.textContent = " ");
 }
 
+function getInputCharsEls(index) {
+  return document
+    .querySelector(`.word-${index + 1}-label`)
+    .querySelectorAll(".word-display-character");
+}
+
 // API REQUESTS
 
 async function getWordOfTheDay(mode) {
@@ -97,7 +103,7 @@ modeSelectorFormEl.mode.forEach((radio) =>
 
 wordInputEls.forEach((input, index) =>
   input.addEventListener("focus", function () {
-    const chars = document.querySelector(`.word-${index + 1}-label`);
+    const chars = getInputCharsEls(index);
 
     chars.querySelectorAll(".word-display-character").forEach((char, index) => {
       if (index === 0) {
@@ -109,7 +115,7 @@ wordInputEls.forEach((input, index) =>
 
 wordInputEls.forEach((input, index) =>
   input.addEventListener("blur", function () {
-    const chars = document.querySelector(`.word-${index + 1}-label`);
+    const chars = getInputCharsEls(index);
 
     chars.querySelectorAll(".word-display-character").forEach((char) => {
       char.classList.remove("focused");
@@ -144,9 +150,9 @@ wordInputEls.forEach((input, index) =>
     }
 
     const value = e.target.value;
-    const chars = document.querySelector(`.word-${index + 1}-label`);
+    const chars = getInputCharsEls(index);
 
-    chars.querySelectorAll(".word-display-character").forEach((char, index) => {
+    chars.forEach((char, index) => {
       if (value[index]) {
         char.textContent = value[index];
       } else {
@@ -169,12 +175,32 @@ async function handleWordSubmit(value, index) {
 
   if (result === true) {
     wordInputEls[index].setAttribute("disabled", "");
+    const charsToDisable = document
+      .querySelector(`.word-${index + 1}-label`)
+      .querySelectorAll(".word-display-character");
+    charsToDisable.forEach((char) => char.classList.add("disabled"));
 
     if (index < 5) {
       wordInputEls[index + 1].removeAttribute("disabled");
+      wordInputEls[index + 1].focus();
+
+      const charsToEnable = document
+        .querySelector(`.word-${index + 2}-label`)
+        .querySelectorAll(".word-display-character");
+      charsToEnable.forEach((char, index) => {
+        char.classList.remove("disabled");
+        if (index === 0) {
+          char.classList.add("focused");
+        }
+      });
     }
   } else {
     alert("Not a known word");
+    wordInputEls[index].value = "";
+    const charsToClear = document
+      .querySelector(`.word-${index + 1}-label`)
+      .querySelectorAll(".word-display-character");
+    charsToClear.forEach((char) => char.textContent(""));
   }
 }
 
