@@ -85,6 +85,14 @@ modeSelectorFormEl.mode.forEach((radio) =>
   })
 );
 
+modeSelectorFormEl.mode.forEach((radio) =>
+  radio.addEventListener("blur", function () {
+    modeSelectorFormEl.mode.forEach((r) => {
+      r.parentNode.classList.remove("focused");
+    });
+  })
+);
+
 // HANDLE FOCUS
 
 wordInputEls.forEach((input, index) =>
