@@ -2,27 +2,31 @@
 
 const API_URL = "https://words.dev-apis.com";
 
+const STATUSES = {
+  loading: "Loading...",
+  validating: "Checking your word...",
+  ready: "Enter a word",
+  error: "Not a known word. Enter again",
+  win: "You win!",
+  loss: "You lose!",
+};
+
 // VALUES
 
 let wordOfTheDay = ""; // string
 let currentMode = "daily"; // daily | random
-let isLoading = true; // boolean
 
 // ELEMENTS
 
 const modeSelectorFormEl = document.querySelector(".mode-selector-form");
 const wordGuessFormEl = document.querySelector(".word-guess-form");
 const wordInputEls = wordGuessFormEl.querySelectorAll(".word-guess-input");
-const currentWordEl = document.querySelector(".loading-word");
+const statusEl = document.querySelector(".status");
 
 // HELPERS
 
-function renderLoading() {
-  wordOfTheDay && console.log(`wordOfTheDay:`, wordOfTheDay);
-
-  isLoading
-    ? (currentWordEl.textContent = "Loading...")
-    : (currentWordEl.textContent = " ");
+function renderStatus(status) {
+  statusEl.textContent = STATUSES[status];
 }
 
 function getInputCharsEls(index) {
@@ -38,32 +42,31 @@ async function getWordOfTheDay(mode) {
   const url = `${API_URL}/word-of-the-day?random=${isRandom}`;
 
   try {
+    renderStatus("loading");
     const res = await fetch(url);
     const data = await res.json();
     wordOfTheDay = data.word;
-    isLoading = false;
+    renderStatus("ready");
   } catch (e) {
     console.error(e);
   }
-
-  renderLoading();
 }
 
 async function validateWord(word) {
   const url = `${API_URL}/validate-word`;
 
   try {
+    renderStatus("validating");
     const res = await fetch(url, {
       method: "POST",
       body: JSON.stringify({ word }),
     });
     const data = await res.json();
+    renderStatus("ready");
     return data.validWord;
   } catch (e) {
     console.error(e);
   }
-
-  renderLoading();
 }
 
 // HANDLE MODE
@@ -105,7 +108,7 @@ wordInputEls.forEach((input, index) =>
   input.addEventListener("focus", function () {
     const chars = getInputCharsEls(index);
 
-    chars.querySelectorAll(".word-display-character").forEach((char, index) => {
+    chars.forEach((char, index) => {
       if (index === 0) {
         char.classList.add("focused");
       }
@@ -117,7 +120,7 @@ wordInputEls.forEach((input, index) =>
   input.addEventListener("blur", function () {
     const chars = getInputCharsEls(index);
 
-    chars.querySelectorAll(".word-display-character").forEach((char) => {
+    chars.forEach((char) => {
       char.classList.remove("focused");
     });
   })
@@ -174,41 +177,59 @@ async function handleWordSubmit(value, index) {
   const result = await validateWord(value);
 
   if (result === true) {
+    // handle prev input
     wordInputEls[index].setAttribute("disabled", "");
-    const charsToDisable = document
-      .querySelector(`.word-${index + 1}-label`)
-      .querySelectorAll(".word-display-character");
-    charsToDisable.forEach((char) => char.classList.add("disabled"));
+    const prevWordChars = getInputCharsEls(index);
+    prevWordChars.forEach((char, charIndex) => {
+      if (char.textContent === wordOfTheDay[charIndex]) {
+        char.classList.add("correct");
+      } else if (wordOfTheDay.includes(char.textContent)) {
+        char.classList.add("valid");
+      }
+      char.classList.add("disabled");
+    });
 
+    // handle win
+    if (value === wordOfTheDay) {
+      return renderStatus("win");
+    }
+
+    // handle next input
     if (index < 5) {
       wordInputEls[index + 1].removeAttribute("disabled");
       wordInputEls[index + 1].focus();
 
-      const charsToEnable = document
-        .querySelector(`.word-${index + 2}-label`)
-        .querySelectorAll(".word-display-character");
-      charsToEnable.forEach((char, index) => {
+      const nextWordChars = getInputCharsEls(index + 1);
+      nextWordChars.forEach((char, index) => {
         char.classList.remove("disabled");
         if (index === 0) {
           char.classList.add("focused");
         }
       });
     }
+
+    // handle lose
+    if (index === 5 && value !== wordOfTheDay) {
+      renderStatus("loss");
+    }
   } else {
-    alert("Not a known word");
+    renderStatus("error");
+
     wordInputEls[index].value = "";
-    const charsToClear = document
-      .querySelector(`.word-${index + 1}-label`)
-      .querySelectorAll(".word-display-character");
-    charsToClear.forEach((char) => char.textContent(""));
+    const charsToClear = getInputCharsEls(index);
+    charsToClear.forEach((char) => (char.textContent = ""));
   }
 }
 
 // INIT AND RESET
 
-function reset() {
+function resetFields() {
   const chars = document.querySelectorAll(`.word-display-character`);
-  chars.forEach((char) => (char.textContent = ""));
+  chars.forEach((char) => {
+    char.textContent = "";
+    char.classList.remove("valid", "correct");
+    char.classList.add("disabled");
+  });
 
   wordInputEls.forEach((input, index) => {
     input.value = "";
@@ -222,11 +243,22 @@ function reset() {
   });
 }
 
-function init(mode) {
-  reset();
-  isLoading = true;
-  renderLoading();
-  getWordOfTheDay(mode);
+function enableInput() {
+  const firstWordChars = getInputCharsEls(0);
+  firstWordChars.forEach((char) => char.classList.remove("disabled"));
+
+  const firstInput = wordInputEls[0];
+
+  firstInput.value = "";
+
+  firstInput.removeAttribute("disabled");
+  firstInput.setAttribute("autofocus", "");
+}
+
+async function init(mode) {
+  resetFields();
+  await getWordOfTheDay(mode);
+  enableInput();
 }
 
 init(currentMode);

@@ -60,7 +60,7 @@ body {
   width: 0;
 }
 
-.loading-word {
+.status {
   height: 20px;
   margin-bottom: 30px;
 }
@@ -110,10 +110,12 @@ body {
 }
 
 .word-display-character.valid {
+  color: #fff;
   background-color: rgb(160, 165, 68);
 }
 
 .word-display-character.correct {
+  color: #fff;
   background-color: rgb(68, 165, 83);
 }
 
