@@ -1,10 +1,14 @@
 * {
-  box-sizing: "border-box";
+  box-sizing: border-box;
 }
 
 body {
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   background-color: #ddd;
+}
+
+.focused {
+  outline: 2px solid rgb(54, 194, 194);
 }
 
 .app-root {
@@ -38,13 +42,9 @@ body {
   align-items: center;
   height: 100px;
   width: 100px;
-  border: 2px solid #111;
+  border: 2px solid rgb(50, 50, 50);
   border-radius: 8px;
   cursor: pointer;
-}
-
-.mode-selector-item.focused {
-  outline: 1px solid cyan;
 }
 
 .mode-selector-item.selected {
@@ -97,6 +97,26 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid grey;
+  border: 2px solid rgb(50, 50, 50);
   cursor: pointer;
+  font-size: 20px;
+  line-height: 20px;
+  text-transform: uppercase;
+}
+
+.word-display-character.disabled {
+  border-color: rgb(200, 200, 200);
+}
+
+.word-display-character.valid {
+  background-color: rgb(160, 165, 68);
+}
+
+.word-display-character.correct {
+  background-color: rgb(68, 165, 83);
+}
+
+.word-display-character.filled {
+  color: #fff;
+  background-color: rgb(150, 150, 150);
 }

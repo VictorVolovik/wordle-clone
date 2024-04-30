@@ -1,13 +1,21 @@
+// CONSTANTS
+
 const API_URL = "https://words.dev-apis.com";
 
-let wordOfTheDay = "";
+// VALUES
+
+let wordOfTheDay = ""; // string
 let currentMode = "daily"; // daily | random
-let isLoading = true;
+let isLoading = true; // boolean
+
+// ELEMENTS
 
 const modeSelectorFormEl = document.querySelector(".mode-selector-form");
 const wordGuessFormEl = document.querySelector(".word-guess-form");
 const wordInputEls = wordGuessFormEl.querySelectorAll(".word-guess-input");
 const currentWordEl = document.querySelector(".loading-word");
+
+// HELPERS
 
 function renderLoading() {
   wordOfTheDay && console.log(`wordOfTheDay:`, wordOfTheDay);
@@ -16,6 +24,8 @@ function renderLoading() {
     ? (currentWordEl.textContent = "Loading...")
     : (currentWordEl.textContent = " ");
 }
+
+// API REQUESTS
 
 async function getWordOfTheDay(mode) {
   const isRandom = mode === "random";
@@ -50,13 +60,7 @@ async function validateWord(word) {
   renderLoading();
 }
 
-function init(mode) {
-  isLoading = true;
-  renderLoading();
-  getWordOfTheDay(mode);
-}
-
-document.body.classList.remove;
+// HANDLE MODE
 
 modeSelectorFormEl.mode.forEach((radio) =>
   radio.addEventListener("change", function (e) {
@@ -81,24 +85,34 @@ modeSelectorFormEl.mode.forEach((radio) =>
   })
 );
 
-init(currentMode);
+// HANDLE FOCUS
+
+wordInputEls.forEach((input, index) =>
+  input.addEventListener("focus", function () {
+    const chars = document.querySelector(`.word-${index + 1}-label`);
+
+    chars.querySelectorAll(".word-display-character").forEach((char, index) => {
+      if (index === 0) {
+        char.classList.add("focused");
+      }
+    });
+  })
+);
+
+wordInputEls.forEach((input, index) =>
+  input.addEventListener("blur", function () {
+    const chars = document.querySelector(`.word-${index + 1}-label`);
+
+    chars.querySelectorAll(".word-display-character").forEach((char) => {
+      char.classList.remove("focused");
+    });
+  })
+);
+
+// HANDLE INPUT
 
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
-}
-
-async function handleWordSubmit(value, index) {
-  const result = await validateWord(value);
-
-  if (result === true) {
-    wordInputEls[index].setAttribute("disabled", "");
-
-    if (index < 5) {
-      wordInputEls[index + 1].removeAttribute("disabled");
-    }
-  } else {
-    alert("Not a known word");
-  }
 }
 
 wordInputEls.forEach((input, index) =>
@@ -130,6 +144,55 @@ wordInputEls.forEach((input, index) =>
       } else {
         char.textContent = " ";
       }
+
+      if (index === e.target.value.length) {
+        char.classList.add("focused");
+      } else {
+        char.classList.remove("focused");
+      }
     });
   })
 );
+
+// HANDLE SUBMIT
+
+async function handleWordSubmit(value, index) {
+  const result = await validateWord(value);
+
+  if (result === true) {
+    wordInputEls[index].setAttribute("disabled", "");
+
+    if (index < 5) {
+      wordInputEls[index + 1].removeAttribute("disabled");
+    }
+  } else {
+    alert("Not a known word");
+  }
+}
+
+// INIT AND RESET
+
+function reset() {
+  const chars = document.querySelectorAll(`.word-display-character`);
+  chars.forEach((char) => (char.textContent = ""));
+
+  wordInputEls.forEach((input, index) => {
+    input.value = "";
+
+    if (index === 0) {
+      input.removeAttribute("disabled");
+      input.setAttribute("autofocus", "");
+    } else {
+      input.setAttribute("disabled", "");
+    }
+  });
+}
+
+function init(mode) {
+  reset();
+  isLoading = true;
+  renderLoading();
+  getWordOfTheDay(mode);
+}
+
+init(currentMode);
