@@ -2,6 +2,10 @@
 
 Simple World clone using HTML, CSS and JS
 
+## Demo
+
+Available at [https://wordle-clone.victorvolovik.com/](https://wordle-clone.victorvolovik.com/)
+
 ## Starting the project
 
 For development
