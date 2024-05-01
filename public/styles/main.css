@@ -81,10 +81,10 @@ body {
 }
 
 .word-guess-input {
-  position: absolute;
+  /* position: absolute;
   opacity: 0;
   height: 0;
-  width: 0;
+  width: 0; */
 }
 
 .word-display {

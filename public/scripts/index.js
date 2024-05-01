@@ -1,6 +1,6 @@
 // CONSTANTS
 
-const DEBUG = false;
+const DEBUG = true;
 
 const API_URL = "https://words.dev-apis.com";
 
@@ -51,9 +51,9 @@ function renderStatus(status) {
 }
 
 function getInputCharsEls(index) {
-  return document
-    .querySelector(`.word-${index + 1}-label`)
-    .querySelectorAll(".word-display-character");
+  return document.querySelectorAll(
+    `.word-${index + 1}-label .word-display-character`
+  );
 }
 
 // API REQUESTS
@@ -156,7 +156,7 @@ function isLetter(letter) {
 
 wordInputEls.forEach((input, index) =>
   input.addEventListener("keydown", function (e) {
-    const value = e.target.value;
+    const value = e.target.value.toLowerCase();
 
     if (value.length === 5 && e.key === "Enter") {
       handleWordSubmit(value, index);
@@ -174,7 +174,7 @@ wordInputEls.forEach((input, index) =>
       e.preventDefault();
     }
 
-    const value = e.target.value;
+    const value = e.target.value.toLowerCase();
     const chars = getInputCharsEls(index);
 
     chars.forEach((char, idx) => {
@@ -184,7 +184,7 @@ wordInputEls.forEach((input, index) =>
         char.textContent = " ";
       }
 
-      if (idx === e.target.value.length) {
+      if (idx === value.length) {
         char.classList.add("focused");
       } else {
         char.classList.remove("focused");
