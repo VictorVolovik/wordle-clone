@@ -11,6 +11,35 @@
     <div class="app-root">
       <h1 class="app-title">Wordle</h1>
 
+      <dialog id="app-help">
+        <h2 class="app-help-title">How To Play</h2>
+
+        <p>Guess the word in 6 tries.</p>
+
+        <p>Each guess must be a valid 5-letter word.</p>
+
+        <p>Press &laquo;Enter&raquo; to submit the word, &laquo;Backspace&raquo; to delete last character entered.</p>
+
+        <p>
+          The color of the tiles will change to show how close your guess was to
+          the word.
+        </p>
+
+        <p class="app-help-example">
+          <span class="character disabled valid">v</span> &mdash; valid, but in the wrong spot
+        </p>
+        <p class="app-help-example">
+          <span class="character disabled correct">c</span> &mdash; valid and in the correct spot
+        </p>
+
+        <form class="app-help-form" method="dialog">
+          <button class="app-help-button app-help-confirm" autofocus>Ok</button>
+        </form>
+      </dialog>
+
+      <button class="app-help-button app-help-trigger">Help</button>
+
+
       <div class="mode-selector">
         <h2 class="mode-selector-title">Select game mode</h2>
 
@@ -43,11 +72,11 @@
         <form name="word-guess-form" class="word-guess-form">
           <label class="word-1-label" for="word-1">
             <div class="word-display">
-              <div class="word-display-character character-1"></div>
-              <div class="word-display-character character-2"></div>
-              <div class="word-display-character character-3"></div>
-              <div class="word-display-character character-4"></div>
-              <div class="word-display-character character-5"></div>
+              <div class="character character-1"></div>
+              <div class="character character-2"></div>
+              <div class="character character-3"></div>
+              <div class="character character-4"></div>
+              <div class="character character-5"></div>
             </div>
 
             <input
@@ -57,17 +86,16 @@
               class="word-guess-input"
               maxlength="5"
               pattern="[a-zA-Z]*"
-              autofocus
             />
           </label>
 
           <label class="word-2-label" for="word-2">
             <div class="word-display">
-              <div class="word-display-character character-1"></div>
-              <div class="word-display-character character-2"></div>
-              <div class="word-display-character character-3"></div>
-              <div class="word-display-character character-4"></div>
-              <div class="word-display-character character-5"></div>
+              <div class="character character-1"></div>
+              <div class="character character-2"></div>
+              <div class="character character-3"></div>
+              <div class="character character-4"></div>
+              <div class="character character-5"></div>
             </div>
 
             <input
@@ -83,11 +111,11 @@
 
           <label class="word-3-label" for="word-3">
             <div class="word-display">
-              <div class="word-display-character character-1"></div>
-              <div class="word-display-character character-2"></div>
-              <div class="word-display-character character-3"></div>
-              <div class="word-display-character character-4"></div>
-              <div class="word-display-character character-5"></div>
+              <div class="character character-1"></div>
+              <div class="character character-2"></div>
+              <div class="character character-3"></div>
+              <div class="character character-4"></div>
+              <div class="character character-5"></div>
             </div>
 
             <input
@@ -103,11 +131,11 @@
 
           <label class="word-4-label" for="word-4">
             <div class="word-display">
-              <div class="word-display-character character-1"></div>
-              <div class="word-display-character character-2"></div>
-              <div class="word-display-character character-3"></div>
-              <div class="word-display-character character-4"></div>
-              <div class="word-display-character character-5"></div>
+              <div class="character character-1"></div>
+              <div class="character character-2"></div>
+              <div class="character character-3"></div>
+              <div class="character character-4"></div>
+              <div class="character character-5"></div>
             </div>
 
             <input
@@ -123,11 +151,11 @@
 
           <label class="word-5-label" for="word-5">
             <div class="word-display">
-              <div class="word-display-character character-1"></div>
-              <div class="word-display-character character-2"></div>
-              <div class="word-display-character character-3"></div>
-              <div class="word-display-character character-4"></div>
-              <div class="word-display-character character-5"></div>
+              <div class="character character-1"></div>
+              <div class="character character-2"></div>
+              <div class="character character-3"></div>
+              <div class="character character-4"></div>
+              <div class="character character-5"></div>
             </div>
 
             <input
@@ -143,11 +171,11 @@
 
           <label class="word-6-label" for="word-6">
             <div class="word-display">
-              <div class="word-display-character character-1"></div>
-              <div class="word-display-character character-2"></div>
-              <div class="word-display-character character-3"></div>
-              <div class="word-display-character character-4"></div>
-              <div class="word-display-character character-5"></div>
+              <div class="character character-1"></div>
+              <div class="character character-2"></div>
+              <div class="character character-3"></div>
+              <div class="character character-4"></div>
+              <div class="character character-5"></div>
             </div>
 
             <input

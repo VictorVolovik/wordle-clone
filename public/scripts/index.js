@@ -8,7 +8,7 @@ const STATUSES = {
   loading: "Loading...",
   validating: "Checking your word...",
   ready: "Enter a word",
-  error: "Not a known word. Enter again",
+  error: "Unknown word. Enter again",
   win: "You win!",
   loss: "You lose!",
 };
@@ -20,6 +20,7 @@ let wordOfTheDayParsed = {
   // [letter:string]: appearances:number
 };
 let currentMode = "daily"; // daily | random
+let appHelpOpenedOnStart = true; // boolean;
 
 // ELEMENTS
 
@@ -27,6 +28,8 @@ const modeSelectorFormEl = document.querySelector(".mode-selector-form");
 const wordGuessFormEl = document.querySelector(".word-guess-form");
 const wordInputEls = wordGuessFormEl.querySelectorAll(".word-guess-input");
 const statusEl = document.querySelector(".status");
+const appHelpDialogEl = document.querySelector("#app-help");
+const appHelpDialogTriggerBtnEl = document.querySelector(".app-help-trigger");
 
 // HELPERS
 
@@ -51,9 +54,9 @@ function renderStatus(status) {
 }
 
 function getInputCharsEls(index) {
-  return document.querySelectorAll(
-    `.word-${index + 1}-label .word-display-character`
-  );
+  return document
+    .querySelector(`.word-${index + 1}-label`)
+    .querySelectorAll(".word-display .character");
 }
 
 // API REQUESTS
@@ -267,10 +270,25 @@ async function handleWordSubmit(value, index) {
   }
 }
 
+// HANDLE HELP DIALOG
+
+function showAppHelp() {
+  appHelpDialogEl.showModal();
+}
+
+appHelpDialogEl.addEventListener("close", function () {
+  if (appHelpOpenedOnStart) {
+    appHelpOpenedOnStart = false;
+    wordInputEls[0].focus();
+  }
+});
+
+appHelpDialogTriggerBtnEl.addEventListener("click", showAppHelp);
+
 // INIT AND RESET
 
 function resetFields() {
-  const chars = document.querySelectorAll(`.word-display-character`);
+  const chars = document.querySelectorAll(`.word-display .character`);
   chars.forEach((char) => {
     char.textContent = "";
     char.classList.remove("valid", "correct");
@@ -298,7 +316,6 @@ function enableInput() {
   firstInput.value = "";
 
   firstInput.removeAttribute("disabled");
-  firstInput.setAttribute("autofocus", "");
 }
 
 async function init(mode) {
@@ -308,3 +325,4 @@ async function init(mode) {
 }
 
 init(currentMode);
+showAppHelp();
