@@ -177,14 +177,14 @@ wordInputEls.forEach((input, index) =>
     const value = e.target.value;
     const chars = getInputCharsEls(index);
 
-    chars.forEach((char, index) => {
-      if (value[index]) {
-        char.textContent = value[index];
+    chars.forEach((char, idx) => {
+      if (value[idx]) {
+        char.textContent = value[idx];
       } else {
         char.textContent = " ";
       }
 
-      if (index === e.target.value.length) {
+      if (idx === e.target.value.length) {
         char.classList.add("focused");
       } else {
         char.classList.remove("focused");
