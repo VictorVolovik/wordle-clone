@@ -1,6 +1,6 @@
 // CONSTANTS
 
-const DEBUG = true;
+const DEBUG = false;
 
 const API_URL = "https://words.dev-apis.com";
 
