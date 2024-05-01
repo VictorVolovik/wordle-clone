@@ -17,7 +17,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  text-align: center;
+  align-items: center;
 }
 
 .mode-selector {
@@ -73,6 +73,7 @@ body {
 
 .word-guess-form {
   max-width: 300px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -122,4 +123,10 @@ body {
 .word-display-character.filled {
   color: #fff;
   background-color: rgb(150, 150, 150);
+}
+
+@media screen and (max-width: 640px) {
+  .app-root {
+    justify-content: flex-start;
+  }
 }
