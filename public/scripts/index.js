@@ -1,5 +1,7 @@
 // CONSTANTS
 
+const DEBUG = false;
+
 const API_URL = "https://words.dev-apis.com";
 
 const STATUSES = {
@@ -14,6 +16,9 @@ const STATUSES = {
 // VALUES
 
 let wordOfTheDay = ""; // string
+let wordOfTheDayParsed = {
+  // [letter:string]: appearances:number
+};
 let currentMode = "daily"; // daily | random
 
 // ELEMENTS
@@ -25,7 +30,23 @@ const statusEl = document.querySelector(".status");
 
 // HELPERS
 
+function parseWord(word) {
+  return word.split("").reduce((accum, curr) => {
+    if (!accum[curr]) {
+      accum[curr] = 1;
+    } else {
+      accum[curr]++;
+    }
+
+    return accum;
+  }, {});
+}
+
 function renderStatus(status) {
+  if (DEBUG && status === "ready") {
+    console.log(`word is: ${wordOfTheDay}`, wordOfTheDayParsed);
+  }
+
   statusEl.textContent = STATUSES[status];
 }
 
@@ -46,6 +67,7 @@ async function getWordOfTheDay(mode) {
     const res = await fetch(url);
     const data = await res.json();
     wordOfTheDay = data.word;
+    wordOfTheDayParsed = parseWord(data.word);
     renderStatus("ready");
   } catch (e) {
     console.error(e);
@@ -173,51 +195,75 @@ wordInputEls.forEach((input, index) =>
 
 // HANDLE SUBMIT
 
+function renderPreInput(index) {
+  const chechAgainst = { ...wordOfTheDayParsed };
+
+  wordInputEls[index].setAttribute("disabled", "");
+  const prevWordChars = getInputCharsEls(index);
+
+  // first we find correctly positioned letters
+  wordOfTheDay.split("").forEach((letter, index) => {
+    const charAtLetterEl = prevWordChars[index];
+    const charAtLetter = charAtLetterEl.textContent;
+
+    if (letter === charAtLetter) {
+      chechAgainst[charAtLetter]--;
+      charAtLetterEl.classList.add("correct");
+    }
+  });
+
+  prevWordChars.forEach((charEl) => {
+    const char = charEl.textContent;
+
+    // then we check if the rest of correct letters were in different positions
+    if (chechAgainst[char]) {
+      chechAgainst[char]--;
+      charEl.classList.add("valid");
+    }
+
+    charEl.classList.add("disabled");
+  });
+}
+
+function renderNextInput(index) {
+  wordInputEls[index + 1].removeAttribute("disabled");
+  wordInputEls[index + 1].focus();
+
+  const nextWordChars = getInputCharsEls(index + 1);
+  nextWordChars.forEach((charEl, index) => {
+    charEl.classList.remove("disabled");
+    if (index === 0) {
+      charEl.classList.add("focused");
+    }
+  });
+}
+
+function resetInputOnError(index) {
+  wordInputEls[index].value = "";
+  const charsToClear = getInputCharsEls(index);
+  charsToClear.forEach((char) => (char.textContent = ""));
+}
+
 async function handleWordSubmit(value, index) {
   const result = await validateWord(value);
 
   if (result === true) {
-    // handle prev input
-    wordInputEls[index].setAttribute("disabled", "");
-    const prevWordChars = getInputCharsEls(index);
-    prevWordChars.forEach((char, charIndex) => {
-      if (char.textContent === wordOfTheDay[charIndex]) {
-        char.classList.add("correct");
-      } else if (wordOfTheDay.includes(char.textContent)) {
-        char.classList.add("valid");
-      }
-      char.classList.add("disabled");
-    });
+    renderPreInput(index);
 
-    // handle win
     if (value === wordOfTheDay) {
       return renderStatus("win");
     }
 
-    // handle next input
     if (index < 5) {
-      wordInputEls[index + 1].removeAttribute("disabled");
-      wordInputEls[index + 1].focus();
-
-      const nextWordChars = getInputCharsEls(index + 1);
-      nextWordChars.forEach((char, index) => {
-        char.classList.remove("disabled");
-        if (index === 0) {
-          char.classList.add("focused");
-        }
-      });
+      renderNextInput(index);
     }
 
-    // handle lose
     if (index === 5 && value !== wordOfTheDay) {
       renderStatus("loss");
     }
   } else {
     renderStatus("error");
-
-    wordInputEls[index].value = "";
-    const charsToClear = getInputCharsEls(index);
-    charsToClear.forEach((char) => (char.textContent = ""));
+    resetInputOnError(index);
   }
 }
 
