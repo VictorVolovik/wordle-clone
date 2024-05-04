@@ -1,4 +1,4 @@
-# World clone
+# Guess the word - Wordle clone
 
 Simple World clone using HTML, CSS and JS
 
