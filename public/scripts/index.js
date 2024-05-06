@@ -4,6 +4,8 @@ const DEBUG = false;
 
 const API_URL = "https://words.dev-apis.com";
 
+const WORD_MAX_LENGTH = 5;
+const LAST_WORD_INDEX = 5;
 const STATUSES = {
   loading: "Loading...",
   validating: "Checking your word...",
@@ -161,7 +163,7 @@ wordInputEls.forEach((input, index) =>
   input.addEventListener("keydown", function (e) {
     const value = e.target.value.toLowerCase();
 
-    if (value.length === 5 && e.key === "Enter") {
+    if (value.length === WORD_MAX_LENGTH && e.key === "Enter") {
       handleWordSubmit(value, index);
     }
 
@@ -253,11 +255,11 @@ async function handleWordSubmit(value, index) {
       return renderStatus("win");
     }
 
-    if (index < 5) {
+    if (index < LAST_WORD_INDEX) {
       renderNextInput(index);
     }
 
-    if (index === 5 && value !== wordOfTheDay) {
+    if (index === LAST_WORD_INDEX && value !== wordOfTheDay) {
       renderStatus("loss");
     }
   } else {
