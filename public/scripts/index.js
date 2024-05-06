@@ -97,7 +97,7 @@ async function validateWord(word) {
 // HANDLE MODE
 
 modeSelectorFormEl.mode.forEach((radio) =>
-  radio.addEventListener("change", function (e) {
+  radio.addEventListener("click", function (e) {
     const newMode = e.target.value;
     if (newMode !== currentMode) {
       modeSelectorFormEl.mode.forEach((r) => {
