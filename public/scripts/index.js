@@ -173,10 +173,6 @@ wordInputEls.forEach((input, index) =>
 
 wordInputEls.forEach((input, index) =>
   input.addEventListener("keyup", function (e) {
-    if (e.key === "Backspace") {
-      e.preventDefault();
-    }
-
     const value = e.target.value.toLowerCase();
     const chars = getInputCharsEls(index);
 
@@ -198,7 +194,7 @@ wordInputEls.forEach((input, index) =>
 
 // HANDLE SUBMIT
 
-function renderPreInput(index) {
+function renderPrevInput(index) {
   const chechAgainst = { ...wordOfTheDayParsed };
 
   wordInputEls[index].setAttribute("disabled", "");
@@ -251,7 +247,7 @@ async function handleWordSubmit(value, index) {
   const result = await validateWord(value);
 
   if (result === true) {
-    renderPreInput(index);
+    renderPrevInput(index);
 
     if (value === wordOfTheDay) {
       return renderStatus("win");
