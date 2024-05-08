@@ -17,7 +17,7 @@ npm run dev
 for production
 
 ```
-npm start
+npm run build && npm start
 ```
 
 then follow to [localhost:3000](http://localhost:3000)
