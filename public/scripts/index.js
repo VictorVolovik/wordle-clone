@@ -6,6 +6,7 @@ const API_URL = "https://words.dev-apis.com";
 
 const WORD_MAX_LENGTH = 5;
 const LAST_WORD_INDEX = 5;
+
 const STATUSES = {
   loading: "Loading...",
   validating: "Checking your word...",
@@ -52,7 +53,10 @@ function renderStatus(status) {
     console.log(`word is: ${wordOfTheDay}`, wordOfTheDayParsed);
   }
 
-  statusEl.textContent = STATUSES[status];
+  statusEl.textContent =
+    status === "loss"
+      ? `${STATUSES[status]} The correct word was ${wordOfTheDay}.`
+      : STATUSES[status];
 }
 
 function getInputCharsEls(index) {
