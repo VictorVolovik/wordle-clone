@@ -179,17 +179,9 @@ wordInputEls.forEach((input, index) =>
     const chars = getInputCharsEls(index);
 
     chars.forEach((char, idx) => {
-      if (value[idx]) {
-        char.textContent = value[idx];
-      } else {
-        char.textContent = " ";
-      }
-
-      if (idx === value.length) {
-        char.classList.add("focused");
-      } else {
-        char.classList.remove("focused");
-      }
+      const shouldFocus = idx === value.length;
+      char.classList.toggle("focused", shouldFocus);
+      char.textContent = value[idx] ?? " ";
     });
   })
 );
