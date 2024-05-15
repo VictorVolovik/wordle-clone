@@ -179,6 +179,7 @@ body {
 }
 
 .character.disabled {
+  cursor: initial;
   border-color: rgb(200, 200, 200);
 }
 
