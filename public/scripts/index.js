@@ -26,13 +26,11 @@ let currentMode = "daily"; // daily | random
 let appHelpOpenedOnStart = true; // boolean;
 
 // ELEMENTS
-
-const modeSelectorFormEl = document.querySelector(".mode-selector-form");
-const wordGuessFormEl = document.querySelector(".word-guess-form");
-const wordInputEls = wordGuessFormEl.querySelectorAll(".word-guess-input");
-const statusEl = document.querySelector(".status");
-const appHelpDialogEl = document.querySelector("#app-help");
-const appHelpDialogTriggerBtnEl = document.querySelector(".app-help-trigger");
+let modeSelectorFormEl;
+let wordGuessFormEl;
+let wordInputEls;
+let appHelpDialogEl;
+let appHelpDialogTriggerBtnEl;
 
 // HELPERS
 
@@ -52,6 +50,7 @@ function renderStatus(status) {
   if (DEBUG && status === "ready") {
     console.log(`word is: ${wordOfTheDay}`, wordOfTheDayParsed);
   }
+  const statusEl = document.querySelector(".status");
 
   statusEl.textContent =
     status === "loss"
@@ -63,6 +62,14 @@ function getInputCharsEls(index) {
   return document
     .querySelector(`.word-${index + 1}-label`)
     .querySelectorAll(".word-display .character");
+}
+
+function isLetter(letter) {
+  return /^[a-zA-Z]$/.test(letter);
+}
+
+function showAppHelp() {
+  appHelpDialogEl.showModal();
 }
 
 // API REQUESTS
@@ -100,95 +107,111 @@ async function validateWord(word) {
   }
 }
 
-// HANDLE MODE
+// HANDLE USER ACTIONS
 
-modeSelectorFormEl.mode.forEach((radio) =>
-  radio.addEventListener("click", function (e) {
-    const newMode = e.target.value;
-    if (newMode !== currentMode) {
-      modeSelectorFormEl.mode.forEach((r) => {
-        r.parentNode.classList.remove("selected");
-      });
-      e.target.parentNode.classList.add("selected");
-      currentMode = e.target.value;
-      init(newMode);
-    }
-  })
-);
-
-modeSelectorFormEl.mode.forEach((radio) =>
-  radio.addEventListener("focus", function (e) {
-    modeSelectorFormEl.mode.forEach((r) => {
-      r.parentNode.classList.remove("focused");
-    });
-    e.target.parentNode.classList.add("focused");
-  })
-);
-
-modeSelectorFormEl.mode.forEach((radio) =>
-  radio.addEventListener("blur", function () {
-    modeSelectorFormEl.mode.forEach((r) => {
-      r.parentNode.classList.remove("focused");
-    });
-  })
-);
-
-// HANDLE FOCUS
-
-wordInputEls.forEach((input, index) =>
-  input.addEventListener("focus", function () {
-    const chars = getInputCharsEls(index);
-
-    chars.forEach((char, index) => {
-      if (index === 0) {
-        char.classList.add("focused");
+function handleModeChange() {
+  modeSelectorFormEl.mode.forEach((radio) =>
+    radio.addEventListener("click", function (e) {
+      const newMode = e.target.value;
+      if (newMode !== currentMode) {
+        modeSelectorFormEl.mode.forEach((r) => {
+          r.parentNode.classList.remove("selected");
+        });
+        e.target.parentNode.classList.add("selected");
+        currentMode = e.target.value;
+        init(newMode);
       }
-    });
-  })
-);
-
-wordInputEls.forEach((input, index) =>
-  input.addEventListener("blur", function () {
-    const chars = getInputCharsEls(index);
-
-    chars.forEach((char) => {
-      char.classList.remove("focused");
-    });
-  })
-);
-
-// HANDLE INPUT
-
-function isLetter(letter) {
-  return /^[a-zA-Z]$/.test(letter);
+    })
+  );
 }
 
-wordInputEls.forEach((input, index) =>
-  input.addEventListener("keydown", function (e) {
-    const value = e.target.value.toLowerCase();
+function handleInput() {
+  wordInputEls.forEach((input, index) =>
+    input.addEventListener("keydown", function (e) {
+      const value = e.target.value.toLowerCase();
 
-    if (value.length === WORD_MAX_LENGTH && e.key === "Enter") {
-      handleWordSubmit(value, index);
+      if (value.length === WORD_MAX_LENGTH && e.key === "Enter") {
+        handleWordSubmit(value, index);
+      }
+
+      if (e.key !== "Backspace" && !isLetter(e.key)) {
+        e.preventDefault();
+      }
+    })
+  );
+
+  wordInputEls.forEach((input, index) =>
+    input.addEventListener("keyup", function (e) {
+      const value = e.target.value.toLowerCase();
+      const chars = getInputCharsEls(index);
+
+      chars.forEach((char, idx) => {
+        const shouldFocus = idx === value.length;
+        char.classList.toggle("focused", shouldFocus);
+        char.textContent = value[idx] ?? " ";
+      });
+    })
+  );
+}
+
+function handleFocus() {
+  modeSelectorFormEl.mode.forEach((radio) =>
+    radio.addEventListener("focus", function (e) {
+      modeSelectorFormEl.mode.forEach((r) => {
+        r.parentNode.classList.remove("focused");
+      });
+      e.target.parentNode.classList.add("focused");
+    })
+  );
+
+  modeSelectorFormEl.mode.forEach((radio) =>
+    radio.addEventListener("blur", function () {
+      modeSelectorFormEl.mode.forEach((r) => {
+        r.parentNode.classList.remove("focused");
+      });
+    })
+  );
+
+  wordInputEls.forEach((input, index) =>
+    input.addEventListener("focus", function () {
+      const chars = getInputCharsEls(index);
+
+      chars.forEach((char, index) => {
+        if (index === 0) {
+          char.classList.add("focused");
+        }
+      });
+    })
+  );
+
+  wordInputEls.forEach((input, index) =>
+    input.addEventListener("blur", function () {
+      const chars = getInputCharsEls(index);
+
+      chars.forEach((char) => {
+        char.classList.remove("focused");
+      });
+    })
+  );
+}
+
+function handleHelpDialog() {
+  appHelpDialogEl.addEventListener("close", function () {
+    if (appHelpOpenedOnStart) {
+      appHelpOpenedOnStart = false;
+      wordInputEls[0].focus();
     }
+  });
 
-    if (e.key !== "Backspace" && !isLetter(e.key)) {
-      e.preventDefault();
-    }
-  })
-);
+  appHelpDialogTriggerBtnEl.addEventListener("click", showAppHelp);
+}
 
-wordInputEls.forEach((input, index) =>
-  input.addEventListener("keyup", function (e) {
-    const value = e.target.value.toLowerCase();
-    const chars = getInputCharsEls(index);
-
-    chars.forEach((char, idx) => {
-      const shouldFocus = idx === value.length;
-      char.classList.toggle("focused", shouldFocus);
-      char.textContent = value[idx] ?? " ";
-    });
-  })
-);
+function attachHandlers() {
+  handleModeChange();
+  handleInput();
+  handleFocus();
+  handleHelpDialog();
+}
 
 // HANDLE SUBMIT
 
@@ -264,21 +287,6 @@ async function handleWordSubmit(value, index) {
   }
 }
 
-// HANDLE HELP DIALOG
-
-function showAppHelp() {
-  appHelpDialogEl.showModal();
-}
-
-appHelpDialogEl.addEventListener("close", function () {
-  if (appHelpOpenedOnStart) {
-    appHelpOpenedOnStart = false;
-    wordInputEls[0].focus();
-  }
-});
-
-appHelpDialogTriggerBtnEl.addEventListener("click", showAppHelp);
-
 // INIT AND RESET
 
 function resetFields() {
@@ -318,5 +326,16 @@ async function init(mode) {
   enableInput();
 }
 
-init(currentMode);
-showAppHelp();
+// APP START
+
+window.addEventListener("DOMContentLoaded", function handleDomContentLoaded() {
+  modeSelectorFormEl = document.querySelector(".mode-selector-form");
+  wordGuessFormEl = document.querySelector(".word-guess-form");
+  wordInputEls = wordGuessFormEl.querySelectorAll(".word-guess-input");
+  appHelpDialogEl = document.querySelector("#app-help");
+  appHelpDialogTriggerBtnEl = document.querySelector(".app-help-trigger");
+
+  attachHandlers();
+  init(currentMode);
+  showAppHelp();
+});
